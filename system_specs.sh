@@ -8,6 +8,10 @@ uname -a
 echo -e "\n===CPU"
 lscpu
 
+echo -e "\n===CPU (Contention)"
+vmstat 1 10
+top -b -n 1 | head -n 20
+
 echo -e "\n===Memory"
 free -h
 grep -E 'MemTotal|MemFree|MemAvailable|SwapTotal|SwapFree' /proc/meminfo
@@ -19,10 +23,13 @@ df -i
 echo -e "\n===Disk: Partitions"
 lsblk -o NAME,TYPE,SIZE,FSTYPE,FSVER,MOUNTPOINTS,MODEL,SERIAL,ROTA,TRAN,SCHED
 
-echo -e "\n===Disk (Kernel)"
+echo -e "\n===Disk: Kernel"
 cat /proc/partitions
 sysctl vm.swappiness vm.dirty_background_ratio vm.dirty_ratio fs.file-mac 2>/dev/null || true
 ulimit -n || true
+
+echo -e "\n===Disk: Latency"
+iostat -xz 1 10
 
 echo -e "\n===Network: Links and Addresses"
 ip -br link
